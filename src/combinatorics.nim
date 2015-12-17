@@ -96,3 +96,33 @@ proc permutations*[T](ys: openarray[T]): seq[seq[T]] =
   for r in permutations(ys):
     result.add(r)
 
+iterator permutationsWithReplacement*[T](ys: openarray[T], k: int): seq[T] =
+  ## Iterates k permutations with replacement from the elements of ys.
+  var
+    d = 1
+    c = newSeq[int](k)
+    xs = newSeq[T](k)
+    n = len(ys)
+
+  for i in 0..<k: xs[i] = ys[0]
+
+  block outer:
+    while true:
+      yield xs
+
+      for i in 0..k:
+        if i == k:
+          break outer
+        elif c[i] >= n-1:
+          c[i] = 0
+          xs[i] = ys[0]
+        else:
+          c[i] += 1
+          xs[i] = ys[c[i]]
+          break
+
+proc permutationsWithReplacement*[T](ys: openarray[T], k: int): seq[seq[T]] =
+  ## Return list of the k permutations with replacement from the elements of ys.
+  result = @[]
+  for r in permutationsWithReplacement(ys, k):
+    result.add(r)
