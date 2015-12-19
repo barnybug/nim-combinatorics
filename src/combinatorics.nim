@@ -90,6 +90,38 @@ iterator permutations*[T](ys: openarray[T]): seq[T] =
       yield xs
       inc c[d]
 
+iterator combinationsWithReplacement*[T](ys: openarray[T], k: int): seq[T] =
+  ## Iterates k combinations with replacement from the elements of ys.
+  var
+    c = newSeq[int](k)
+    xs = newSeq[T](k)
+    n = len(ys)
+
+  for i in 0..<k:
+    xs[i] = ys[c[i]]
+
+  block outer:
+    while true:
+      yield xs
+      # search backwards for non-maximum index
+      for i in countdown(k-1,-1):
+        if i == -1:
+          # if all c hits maximum - done
+          break outer
+
+        if c[i] < n - 1:
+          var level = c[i] + 1
+          for i in i..<k:
+            c[i] = level
+            xs[i] = ys[level]
+          break
+
+proc combinationsWithReplacement*[T](ys: openarray[T], k: int): seq[seq[T]] =
+  ## Return list of the k combinations with replacement from the elements of ys.
+  result = @[]
+  for r in combinationsWithReplacement(ys, k):
+    result.add(r)
+ 
 proc permutations*[T](ys: openarray[T]): seq[seq[T]] =
   ## Return list of the n size combinations from the elements of ys.
   result = @[]
