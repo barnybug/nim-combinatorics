@@ -20,7 +20,7 @@ iterator combinations*(m: int, n: int): seq[int] =
   ## Iterates n size combinations from the first 0..<m natural numbers.
   # Adapted from: http://rosettacode.org/wiki/Combinations#Nim
   var c = newSeq[int](n)
-  for i in 0 .. <n:
+  for i in 0..<n:
     c[i] = i
  
   block outer:
