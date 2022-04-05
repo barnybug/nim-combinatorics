@@ -69,25 +69,22 @@ iterator permutations*[T](ys: openarray[T]): seq[T] =
   # Iterative Boothroyd method taken from:
   # Taken from: http://rosettacode.org/wiki/Permutations#Nim
   var
-    d = 1
-    c = newSeq[int](ys.len)
+    d = 0
+    c = newSeq[int](max(1, ys.len))
     xs = newSeq[T](ys.len)
  
   for i, y in ys: xs[i] = y
-  yield xs
  
   block outer:
     while true:
-      while d > 1:
-        dec d
-        c[d] = 0
+      yield xs
+      d = 0
       while c[d] >= d:
+        c[d] = 0
         inc d
         if d >= ys.len: break outer
- 
       let i = if (d and 1) == 1: c[d] else: 0
       swap xs[i], xs[d]
-      yield xs
       inc c[d]
 
 iterator combinationsWithReplacement*[T](ys: openarray[T], k: int): seq[T] =
