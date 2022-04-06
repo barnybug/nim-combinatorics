@@ -70,22 +70,24 @@ iterator permutations*[T](ys: openarray[T]): seq[T] =
   # Taken from: http://rosettacode.org/wiki/Permutations#Nim
   var
     d = 0
-    c = newSeq[int](max(1, ys.len))
+    c = newSeq[int](max(2, ys.len+1))
     xs = newSeq[T](ys.len)
  
   for i, y in ys: xs[i] = y
- 
-  block outer:
-    while true:
-      yield xs
-      d = 0
-      while c[d] >= d:
-        c[d] = 0
-        inc d
-        if d >= ys.len: break outer
-      let i = if (d and 1) == 1: c[d] else: 0
-      swap xs[i], xs[d]
-      inc c[d]
+  for i, _ in c: c[i] = i
+
+  while true:
+    yield xs
+    
+    d = 1
+    while c[d] == 0:
+      c[d] = d
+      inc d
+    if d >= ys.len: break
+
+    dec c[d]
+    let i = if (d and 1) == 1: c[d] else: 0
+    swap xs[i], xs[d]
 
 iterator combinationsWithReplacement*[T](ys: openarray[T], k: int): seq[T] =
   ## Iterates k combinations with replacement from the elements of ys.
